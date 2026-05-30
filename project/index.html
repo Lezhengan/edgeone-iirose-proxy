@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EdgeOne 图片反代 - r.iirose.com</title>
+  <script>
+    var PROXY_DOMAIN = location.hostname;
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+    .container { max-width: 960px; margin: 0 auto; padding: 40px 20px; }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      color: #888;
+      margin-bottom: 40px;
+      font-size: 14px;
+    }
+    .subtitle code {
+      background: #1e1e32;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #a0a0ff;
+      font-size: 13px;
+    }
+    .card {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid #2a2a4a;
+    }
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: #c0c0ff;
+    }
+    .card p { color: #aaa; font-size: 14px; line-height: 1.7; }
+    .card p + p { margin-top: 8px; }
+    code {
+      background: #252545;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #b0b0ff;
+    }
+    .url-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #12122a;
+      border: 1px solid #2a2a4a;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 12px 0;
+    }
+    .url-bar .label {
+      color: #667eea;
+      font-weight: 600;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .url-bar .url {
+      color: #e0e0e0;
+      font-family: monospace;
+      font-size: 14px;
+      word-break: break-all;
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .demo-item {
+      background: #12122a;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #2a2a4a;
+      transition: border-color 0.2s;
+    }
+    .demo-item:hover { border-color: #667eea; }
+    .demo-item img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+    }
+    .demo-item .demo-label {
+      padding: 8px 12px;
+      font-size: 12px;
+      color: #888;
+      border-top: 1px solid #2a2a4a;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .status-active { background: #1a3a2a; color: #4ade80; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid #2a2a4a;
+    }
+    th { color: #888; font-weight: 600; font-size: 12px; text-transform: uppercase; }
+    td { color: #ccc; font-family: monospace; font-size: 13px; }
+    .endpoint {
+      background: #252545;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 12px 0;
+      font-family: monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #b0b0ff;
+      overflow-x: auto;
+    }
+    .endpoint .comment { color: #666; }
+    .footer {
+      text-align: center;
+      color: #555;
+      font-size: 13px;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #2a2a4a;
+    }
+    .error-img {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1;
+      background: #1a1a2e;
+      color: #666;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>EdgeOne 图片反代</h1>
+    <p class="subtitle">
+      透明反向代理 <code>r.iirose.com</code> 的图片资源，支持 CORS、智能缓存、断点续传
+    </p>
+
+    <div class="card">
+      <h2>使用方式</h2>
+      <p>
+        部署后，将原本引用 <code>r.iirose.com</code> 的图片链接替换为你的 EdgeOne 加速域名即可，
+        路径和参数保持不变。
+      </p>
+      <div class="url-bar">
+        <span class="label">源站:</span>
+        <span class="url">https://r.iirose.com/i/25/2/5/13/3418-D2.gif</span>
+      </div>
+      <div class="url-bar">
+        <span class="label">反代:</span>
+        <span class="url" id="proxy-url">https://<span style="color:#ff6b6b">你的域名.com</span>/i/25/2/5/13/3418-D2.gif</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>在线演示</h2>
+      <p>以下图片通过本反代服务从 <code>r.iirose.com</code> 获取（如果源站资源有变动，部分图片可能失效）</p>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <img src="/i/26/5/18/4/5228-2X.jpg" alt="proxy demo 1"
+               onerror="this.parentElement.innerHTML='<div class=error-img>加载失败</div>'"
+               loading="lazy">
+          <div class="demo-label">/i/26/5/18/4/5228-2X.jpg</div>
+        </div>
+        <div class="demo-item">
+          <img src="/i/26/5/9/22/2336-WN.jpg" alt="proxy demo 2"
+               onerror="this.parentElement.innerHTML='<div class=error-img>加载失败</div>'"
+               loading="lazy">
+          <div class="demo-label">/i/26/5/9/22/2336-WN.jpg</div>
+        </div>
+        <div class="demo-item">
+          <img src="/i/26/5/9/22/2154-D9.jpg" alt="proxy demo 3"
+               onerror="this.parentElement.innerHTML='<div class=error-img>加载失败</div>'"
+               loading="lazy">
+          <div class="demo-label">/i/26/5/9/22/2154-D9.jpg</div>
+        </div>
+        <div class="demo-item">
+          <img src="/i/26/5/9/22/2147-QZ.jpg" alt="proxy demo 4"
+               onerror="this.parentElement.innerHTML='<div class=error-img>加载失败</div>'"
+               loading="lazy">
+          <div class="demo-label">/i/26/5/9/22/2147-QZ.jpg</div>
+        </div>
+        <div class="demo-item">
+          <img src="/i/24/12/7/2/0545-4M.jpg" alt="proxy demo 5"
+               onerror="this.parentElement.innerHTML='<div class=error-img>加载失败</div>'"
+               loading="lazy">
+          <div class="demo-label">/i/24/12/7/2/0545-4M.jpg</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>功能特性</h2>
+      <table>
+        <tr><th>特性</th><th>说明</th></tr>
+        <tr><td>透明代理</td><td>原样转发路径和查询参数，无需修改现有 URL 结构</td></tr>
+        <tr><td>CORS 支持</td><td>允许任意跨域请求，可安全用于前端 <code>&lt;img&gt;</code> 或 <code>fetch</code></td></tr>
+        <tr><td>智能缓存</td><td>图片缓存 1 年，其他静态资源缓存 1 天，动态内容不缓存</td></tr>
+        <tr><td>Range 支持</td><td>支持断点续传，优化大图加载体验</td></tr>
+        <tr><td>错误处理</td><td>统一返回 502 及错误信息，便于排查</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>API 参考</h2>
+      <div class="endpoint">
+        <span class="comment"># 代理所有路径到 r.iirose.com</span><br>
+        <span style="color:#4ade80;">GET</span> /{path} [<span style="color:#ffd700;">?query</span>]<br>
+        <br>
+        <span class="comment"># 预检请求</span><br>
+        <span style="color:#f0ad4e;">OPTIONS</span> /{path}<br>
+        <br>
+        <span class="comment"># 响应头</span><br>
+        cache-control: public, max-age=31536000, immutable<br>
+        access-control-allow-origin: *<br>
+        x-cache-status: HIT
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>部署说明</h2>
+      <p>
+        <strong>1.</strong> 在 <a href="https://edgeone.ai" style="color:#667eea;" target="_blank">EdgeOne 控制台</a> 添加你的站点并完成接入
+      </p>
+      <p>
+        <strong>2.</strong> 进入 <strong>函数管理</strong> → <strong>新建函数</strong>，将
+        <code>edge-functions/[[path]].js</code> 中的代码粘贴部署
+      </p>
+      <p>
+        <strong>3.</strong> 设置触发规则，匹配路径为 <code>/*</code>（或你想要的路径前缀）
+      </p>
+      <p>
+        <strong>4.</strong> 在 EdgeOne 站点添加源站为 <code>r.iirose.com</code> 的加速域名，
+        或将函数关联到你的加速域名
+      </p>
+      <p style="margin-top:12px; color:#888;">
+        <span style="color:#f0ad4e;">提示:</span>
+        如果只想代理特定路径（如 <code>/file/*</code>），可以在函数入口处增加路径判断逻辑。
+      </p>
+    </div>
+
+    <div class="footer">
+      Powered by Tencent Cloud EdgeOne Edge Functions
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("proxy-url").innerHTML =
+      'https://<span style="color:#ff6b6b">' + PROXY_DOMAIN + '</span>/i/25/2/5/13/3418-D2.gif';
+  </script>
+</body>
+</html>
