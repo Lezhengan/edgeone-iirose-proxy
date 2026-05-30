@@ -30,11 +30,6 @@
 3. 部署完成后即可通过生成的 `*.edgeone.site` 域名访问
 4. 可绑定自定义域名
 
-### GitHub Pages
-
-1. 创建 GitHub 仓库并推送代码
-2. 在仓库 Settings → Pages 中选择部署源即可
-
 ## 浏览器替换脚本
 
 `iirose-replace.js` 可将页面中所有 `r.iirose.com` 的图片链接替换为反代域名。
